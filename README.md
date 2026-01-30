@@ -6,27 +6,64 @@
 
 Este repositório contém a solução técnica para o **Desafio 2: Dinâmica de Voo do Nashira**, desenvolvido como parte do Processo Seletivo da **EPTA (Equipe de Propulsão e Tecnologia Aeroespacial)** da Universidade Federal de Uberlândia (UFU).
 
-## 📄 Resumo dos Dados
-A análise baseou-se estritamente no arquivo de log `nashira_telemetry.csv`.
+### 🚀 Verificação de Ambiente e Dependênciass
+Este script inicial tem como objetivo preparar o ambiente de execução Python para simulações aeroespaciais. Ele verifica se todas as bibliotecas necessárias estão instaladas e, caso falte alguma, realiza a instalação automática.
+```
+# Tenta importar as bibliotecas
+try:
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import rocketpy
+    print("✅ Sucesso! Todas as bibliotecas estão instaladas.")
+except ImportError as e:
+    # Se der erro, ele avisa qual falta e explica como instalar
+    print(f"❌ Falta uma biblioteca: {e.name}")
+    print("Tentando instalar automaticamente...")
+    
+    # Comando mágico para instalar direto pelo notebook
+    # O "!" diz para o notebook rodar um comando de terminal
+    !pip install pandas numpy matplotlib rocketpy scipy
+    
+    print("Instalação concluída. Por favor, reinicie o Kernel (Kernel -> Restart) e tente novamente.")
+```
+### 📋 Bibliotecas Utilizadas
+Biblioteca
+- Pandas:	        Manipulação e análise de dados tabulares.
+- NumPy:	        Processamento de matrizes e cálculos matemáticos de alta performance.
+- Matplotlib:	    Geração de gráficos e visualizações de dados.
+- RocketPy:	    Biblioteca principal para simulação de trajetória de foguetes de sondagem.
+- SciPy:	        Ferramentas para integração numérica e otimização (instalada como dependência).
 
-## 📄 Sobre o Projeto
+### 🛠️ Como o código funciona
+- O script utiliza um bloco try-except para gerenciar a configuração de forma inteligente:
+- Tentativa de Importação: O Python tenta carregar as bibliotecas na memória. Se todas estiverem presentes, uma mensagem de sucesso é exibida.
+- Tratamento de Erros (ImportError): Caso alguma biblioteca não seja encontrada (como a RocketPy, que não costuma vir pré-instalada em ambientes como o Google Colab ou Anaconda), o script captura o erro.
+- Instalação Automática: O comando !pip install é acionado diretamente do terminal do notebook para baixar as dependências faltantes.
+- Reinicialização do Kernel: Após a instalação, o usuário é instruído a reiniciar o Kernel para que as novas bibliotecas sejam reconhecidas corretamente pelo interpretador.
 
-O objetivo principal deste desafio foi realizar uma **Análise Comparativa de Voo**, confrontando dois cenários distintos:
-1.  **Cenário Real:** Dados de telemetria obtidos durante o voo do foguete *Nashira* na competição LASC (Latin America Space Challenge).
-2.  **Cenário Teórico:** Simulação computacional de trajetória realizada com a biblioteca *RocketPy*.
+### ⚠️ Observação Importante
+Sempre que o comando !pip install for executado, é fundamental reiniciar o Kernel do seu Jupyter Notebook ou Google Colab antes de prosseguir com os cálculos físicos para evitar conflitos de versão.
 
-## 🛠️ Tecnologias e Ferramentas
+# 📊 Carregamento e Inspeção de Telemetria
+Esta etapa do projeto foca em importar os dados brutos gerados pelos sensores do foguete (ou simulador) e validar a integridade desses dados para as análises subsequentes.
+# Carrega o arquivo avisando ao Python que o decimal é vírgula
+```
+df = pd.read_csv('nashira_telemetry.csv', decimal=',')
 
-O projeto foi desenvolvido inteiramente em **Python** utilizando Jupyter Notebooks. As principais bibliotecas empregadas foram:
+# Mostra as 5 primeiras linhas para conferir se deu certo
+display(df.head())
 
-* **[RocketPy](https://github.com/RocketPy-Team/RocketPy):** Para simulação de voo 6-DOF, modelagem atmosférica e balística.
-* **Pandas:** Para ingestão, limpeza e manipulação dos dados brutos de telemetria (.csv).
-* **Matplotlib:** Para visualização de dados e plotagem dos perfis de voo (Altitude x Tempo).
-* **NumPy:** Para cálculos vetoriais e tratamento numérico.
+# Mostra informações sobre as colunas (para garantir que são números 'float' e não texto 'object')
+df.info()
+```
 
-## 📊 Metodologia
+### 🛠️ Descrição do Processo
+O script realiza três operações críticas:
 
-A solução foi estruturada em três etapas lógicas:
+1. Leitura de Dados com Formatação Regional
+Python
+- ```df = pd.read_csv('nashira_telemetry.csv', decimal=',')```
 
 ### 1. Tratamento de Dados Reais
 Os dados brutos do sensor (`nashira_telemetry.csv`) apresentavam ruído e formatação não padrão (uso de vírgula decimal).
