@@ -151,10 +151,33 @@ Sem esses ajustes, os gráficos seriam de difícil leitura: o tempo estaria em v
 - Gráficos em Vetor (svg): Esta configuração garante que todos os gráficos gerados pelo RocketPy tenham qualidade profissional. Ao contrário do formato padrão (pixelado), o formato SVG permite que você dê zoom nos gráficos sem perder a nitidez, o que é essencial para analisar detalhes de estabilidade.
 - Modo Inline: Garante que todas as visualizações e plots apareçam diretamente dentro do seu notebook, logo abaixo das células de código.
 
-# 🌍 Modelagem do Ambiente (Environment)
+# 🌍 Modelagem do Ambiente (Standard Environment)
 O ambiente foi configurado com base nas coordenadas de lançamento (Iacanga/SP), local onde ocorrem competições como o LASC (Latin American Space Challenge):
 - Latitude/Longitude: Define a posição no globo para cálculos de gravidade e rotação da Terra.
 - Elevação (423m): Define o nível do solo em relação ao nível do mar. Isso é vital, pois a pressão atmosférica na base da rampa de lançamento afeta o desempenho inicial do motor.
+from rocketpy import Environment
+
+# 1.Configurando o Ambiente
+```
+env = Environment(
+    latitude=-21.8914, 
+    longitude=-49.0225,
+    elevation=423
+)
+
+# 2. Definindo a Data do Desafio (Passado)
+# Data exata do PDF: 7 de Dezembro de 2025
+env.set_date((2025, 12, 7, 12))
+
+# 3. Definindo Atmosfera Padrão
+# IMPORTANTE: Como a data é 2025, usamos StandardAtmosphere.
+# O modo "Forecast/GFS" só funcionaria se a data fosse HOJE ou AMANHÃ.
+env.set_atmospheric_model(type="standard_atmosphere")
+
+# 4. Verificação Final
+print("Ambiente configurado com sucesso para Iacanga/SP (LASC)!")
+env.info()
+```
 
 ### 🗓️ Referência Temporal e Modelo Atmosférico
 ```
